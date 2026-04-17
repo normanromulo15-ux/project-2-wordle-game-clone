@@ -1,0 +1,81 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 1rem;
+}
+
+input {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+section.the-game {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: auto;
+}
+
+section.attempts > * {
+  text-align: center;
+  color: white;
+  background-color: grey;
+}
+
+p {
+  text-align: center;
+}
+
+form.answer-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.letters-container {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 1rem;
+  border: 3px solid black;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.letter-button {
+  color: white;
+  text-align: center;
+  font-size: 1rem;
+  border: none;
+  background-color: rgb(46, 41, 41);
+  padding: 1rem;
+}
+
+button.submit-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: green;
+  color: white;
+  font-weight: bolder;
+  font-size: 1rem;
+}
+
+button:disabled {
+  cursor: no-drop;
+  background-color: red;
+  opacity: 30%;
+}
