@@ -1,14 +1,9 @@
 import { useState } from "react";
+import letters from "./Letters.js";
 
-function Letters() {
-
-  const letters = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
-
+function LetterButtons(props) {
   function handleLetterClick(e) {
-
     const { value } = e.target;
-
-    console.log(value)
   }
 
   return (
@@ -27,8 +22,11 @@ function Letters() {
           </button>
         )
       }
+      <button type="button">  
+        OK
+      </button>
     </div>
   )
 }
 
-export default Letters;
+export default LetterButtons;

@@ -2,6 +2,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: sans-serif;
+}
+
+#root {
+  background-color: whitesmoke;
 }
 
 button {
@@ -10,9 +15,14 @@ button {
   border-radius: 1rem;
 }
 
-input {
-  padding: 0.5rem;
-  font-size: 1rem;
+h2 {
+  text-align: center;
+}
+
+.starting-button {
+  background-color: green;
+  color: white;
+  border: 3px solid black;
 }
 
 .app {
@@ -24,17 +34,11 @@ input {
   justify-content: center;
 }
 
-section.the-game {
+main.the-game {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: auto;
-}
-
-section.attempts > * {
-  text-align: center;
-  color: white;
-  background-color: grey;
 }
 
 p {
@@ -45,6 +49,13 @@ form.answer-tab {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+form.answer-tab > input {
+  border-radius: 1rem;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 1rem;
 }
 
 .letters-container {
@@ -78,4 +89,20 @@ button:disabled {
   cursor: no-drop;
   background-color: red;
   opacity: 30%;
+}
+
+.answers-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.user-answer {
+  font-family: sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  border: 1px solid black;
+  padding: 0.5rem;
+  background-color: black;
+  color: white;
 }
