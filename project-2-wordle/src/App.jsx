@@ -12,7 +12,6 @@ function App() {
   const [inputContainer, setInputContainer] = useState([]); // Array to store the user's letters per answer 
   const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
 
-
   useEffect(getRandomWord, [restartGame]);
 
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
@@ -47,15 +46,22 @@ function App() {
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (words.includes(userInput)) {
-      if (userInput === randomWord) {
-        alert(`You guessed the word! (${randomWord})`)
 
-        setInputContainer([]);
-        setRestartGame(prevValue => !prevValue);
-        setUserInput("");
+      // CHECK IF THE INPUT WORD MATCHES THE HIDDEN WORD
+      if (userInput === randomWord) {
+        setInputContainer(userInput.split(""));
+
+        setTimeout(() => {
+          alert(`You guessed the word! (${randomWord})`)
+          setInputContainer([]);
+          setRestartGame(prevValue => !prevValue);
+          setUserInput("");
+
+        }, 500);
 
       } else {
         setInputContainer(userInput.split(""));
+        console.log(randomWord)
       }
 
     } else {

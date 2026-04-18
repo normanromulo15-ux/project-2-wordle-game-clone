@@ -3,26 +3,31 @@ import { useState } from "react";
 function Progress(props) {
   const { inputContainer, randomWord } = props;
   const hiddenWord = randomWord.split("");
-  const [bgColor, setBgColor] = useState("");
 
+  let bgColor = null;
 
   return (
     <div className="answers-container">
       {inputContainer.map((answer, index) => {
-        console.log(hiddenWord.join(""));
+        if (answer === hiddenWord[index]) {
+          bgColor = 'green'
+        } else if (hiddenWord.includes(answer)) {
+          bgColor = 'orange'
+        } else {
+          bgColor = 'black'
+        }
 
         return <div
           className="user-answer"
           key={index}
           style={
             {
-              backgroundColor: (answer === hiddenWord[index] && hiddenWord.includes(answer)) && 'green'
+              backgroundColor: bgColor
             }
           }
         >
           {answer}
         </div>
-
       }
       )}
     </div>
