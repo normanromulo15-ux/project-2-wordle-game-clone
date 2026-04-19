@@ -5,17 +5,21 @@ function Progress(props) {
 
   // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
   function getGuessColors(guess) {
+
+    // INITIALIZE AN ARRAY TO HOLD THE COLOR FOR EACH LETTER IN THE GUESS, DEFAULTING TO BLACK
     const colors = Array(guess.length).fill('black');
-    const remainingLetters = randomWord.split('');
+
+    // CREATE A COPY OF THE RANDOM WORD AS AN ARRAY TO TRACK USED LETTERS
+    const randomWordLetters = randomWord.split("");
 
     // PASS 1: CHECK FOR CORRECT LETTERS IN THE CORRECT POSITION (GREEN)
     for (let i = 0; i < guess.length; i++) {
-      if (guess[i] === remainingLetters[i]) {
+      if (guess[i] === randomWordLetters[i]) {
         // MARK THIS LETTER AS GREEN
         colors[i] = 'green';
 
         // MARK THIS LETTER AS USED TO AVOID DUPLICATE MATCHES IN PASS 2
-        remainingLetters[i] = null;
+        randomWordLetters[i] = '*';
       }
     }
 
@@ -26,18 +30,19 @@ function Progress(props) {
       if (colors[i] === 'green') continue;
 
       // RETURNS THE INDEX OF THE FIRST OCCURRENCE OF THE LETTER IN THE REMAINING LETTERS ARRAY
-      const letterIndex = remainingLetters.indexOf(guess[i]);
+      const letterIndex = randomWordLetters.indexOf(guess[i]);
 
       if (letterIndex !== -1) {
         // MARK THIS LETTER AS ORANGE
         colors[i] = 'orange';
 
         // MARK THIS LETTER AS USED TO AVOID DUPLICATE MATCHES
-        remainingLetters[letterIndex] = null;
+        randomWordLetters[letterIndex] = '*';
       }
     }
 
-    return colors; // RETURNS AN ARRAY OF COLORS CORRESPONDING TO EACH LETTER IN THE GUESS
+    // RETURNS AN ARRAY OF COLORS CORRESPONDING TO EACH LETTER IN THE GUESS
+    return colors;
   }
 
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import words from "../../words.js";
-import {easy, medium, hard} from "../../words.js";
+import { easy, medium, hard } from "../../words.js";
 import LetterButtons from "./components/LetterButtons.jsx";
 import Answer from "./components/Answer.jsx";
 import Progress from "./components/Progress.jsx";
@@ -12,6 +12,10 @@ function App() {
   const [userInput, setUserInput] = useState("");
   const [answers, setAnswers] = useState([]); // Array to store the user's guesses
   const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
+
+  // COUNT THE NUMBER OF GUESSES THE USER HAS MADE
+  const guessCount = answers.length;
+  console.log(`Number of guesses: ${guessCount}`);
 
   useEffect(getRandomWord, [restartGame]);
 
@@ -48,13 +52,24 @@ function App() {
       return;
     }
 
+    // CHECK IF THE USER HAS ALREADY REACHED THE MAXIMUM NUMBER OF GUESSES (6)
+    if (guessCount >= 6) {
+      alert(`Game over! The word was "${randomWord}". Starting a new game...`);
+      setAnswers([]);
+      setRestartGame(prevValue => !prevValue);
+      return;
+    }
+
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
-    setAnswers(prevAnswers => [...prevAnswers, guess]);
+    setAnswers(prevAnswers => {
+      const userAnswers = [...prevAnswers, guess];
+      return userAnswers;
+    });
 
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
       setTimeout(() => {
-        alert(`You guessed the word! (${randomWord})`);
+        alert(`You guessed the word! The word was "${randomWord}". Starting a new game...`);
         setAnswers([]);
         setRestartGame(prevValue => !prevValue);
       }, 500);
