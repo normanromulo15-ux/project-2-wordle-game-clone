@@ -5756,8 +5756,6 @@ const words = [
   "rumba",
   "biffy",
   "pupal"
-].map(letter => letter.toUpperCase());
-
-words.sort();
+].map(e => e.toUpperCase().trim());
 
 export default words;

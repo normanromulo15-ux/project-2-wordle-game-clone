@@ -22,9 +22,7 @@ function LetterButtons(props) {
           </button>
         )
       }
-      <button type="button">  
-        OK
-      </button>
+    
     </div>
   )
 }

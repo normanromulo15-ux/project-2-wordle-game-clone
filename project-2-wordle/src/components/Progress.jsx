@@ -1,35 +1,39 @@
 import { useState } from "react";
 
 function Progress(props) {
-  const { inputContainer, randomWord } = props;
-  const hiddenWord = randomWord.split("");
+  const { randomWord, answers } = props;
 
-  let bgColor = null;
+  function getBgColor(letter, index) {
+    if (letter === randomWord[index]) {
+      return 'green';
+    }
+
+    if (randomWord.includes(letter)) {
+      return 'orange';
+    }
+
+    return 'black';
+  }
 
   return (
-    <div className="answers-container">
-      {inputContainer.map((answer, index) => {
-        if (answer === hiddenWord[index]) {
-          bgColor = 'green'
-        } else if (hiddenWord.includes(answer)) {
-          bgColor = 'orange'
-        } else {
-          bgColor = 'black'
-        }
-
-        return <div
-          className="user-answer"
-          key={index}
-          style={
+    <div className="answers-display">
+      {
+        answers.map((guess, guessIndex) => (
+          <div className="answers-container" key={guessIndex}>
             {
-              backgroundColor: bgColor
+              guess.split("").map((letter, index) => (
+                <div
+                  className="user-answer"
+                  key={`${guessIndex}-${index}`}
+                  style={{ backgroundColor: getBgColor(letter, index) }}
+                >
+                  {letter}
+                </div>
+              ))
             }
-          }
-        >
-          {answer}
-        </div>
+          </div>
+        ))
       }
-      )}
     </div>
   )
 }

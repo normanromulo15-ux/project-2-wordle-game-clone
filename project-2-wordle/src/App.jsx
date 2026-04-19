@@ -9,7 +9,7 @@ function App() {
   const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
-  const [inputContainer, setInputContainer] = useState([]); // Array to store the user's letters per answer 
+  const [answers, setAnswers] = useState([]); // Array to store the user's guesses
   const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
 
   useEffect(getRandomWord, [restartGame]);
@@ -27,47 +27,40 @@ function App() {
   function handleUserAnswer(e) {
     const { value } = e.target;
 
-    const answer = value.trim().split("");
+    const formattedAnswer = value.trim().toUpperCase();
 
-    const formattedAnswer = answer.map(letter => letter.toUpperCase());
-
-    setUserInput(formattedAnswer.join(""));
-
-    if (value.length === 5) {
-      setEnableSubmitButton(true);
-    } else {
-      setEnableSubmitButton(false);
-    }
+    setUserInput(formattedAnswer);
+    setEnableSubmitButton(formattedAnswer.length === 5);
   }
 
   // FUNCTION TO HANDLE CLICK SUBMIT BUTTON
   function handleSubmitButton(e) {
     e.preventDefault();
 
+    const guess = userInput;
+    console.log(randomWord);
+
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
-    if (words.includes(userInput)) {
-
-      // CHECK IF THE INPUT WORD MATCHES THE HIDDEN WORD
-      if (userInput === randomWord) {
-        setInputContainer(userInput.split(""));
-
-        setTimeout(() => {
-          alert(`You guessed the word! (${randomWord})`)
-          setInputContainer([]);
-          setRestartGame(prevValue => !prevValue);
-          setUserInput("");
-
-        }, 500);
-
-      } else {
-        setInputContainer(userInput.split(""));
-        console.log(randomWord)
-      }
-
-    } else {
-      alert("Invalid word.")
+    if (!words.includes(guess)) {
+      alert("Invalid word.");
+      setUserInput("");
+      setEnableSubmitButton(false);
+      return;
     }
 
+    // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
+    setAnswers(prevAnswers => [...prevAnswers, guess]);
+
+    // CHECK IF THE USER'S GUESS IS CORRECT
+    if (guess === randomWord) {
+      setTimeout(() => {
+        alert(`You guessed the word! (${randomWord})`);
+        setAnswers([]);
+        setRestartGame(prevValue => !prevValue);
+      }, 500);
+    }
+
+    // CLEAR THE INPUT FIELD AND DISABLE THE SUBMIT BUTTON
     setUserInput("");
     setEnableSubmitButton(false);
   }
@@ -76,9 +69,9 @@ function App() {
     <div className="app">
       {!startGame &&
         <button
+          type="button"
           className="starting-button"
           onClick={() => setStartGame(true)}
-          type="button"
         >
           PLAY
         </button>
@@ -86,8 +79,8 @@ function App() {
       {startGame &&
         <main className="the-game">
           <Progress
-            inputContainer={inputContainer}
             randomWord={randomWord}
+            answers={answers}
           />
 
           <Answer
@@ -98,8 +91,6 @@ function App() {
           />
 
           <LetterButtons
-            inputContainer={inputContainer}
-            randomWord={randomWord}
           />
 
         </main>
