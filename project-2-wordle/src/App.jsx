@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import words from "../../words.js";
+import {easy, medium, hard} from "../../words.js";
 import LetterButtons from "./components/LetterButtons.jsx";
 import Answer from "./components/Answer.jsx";
 import Progress from "./components/Progress.jsx";
@@ -16,8 +17,7 @@ function App() {
 
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
   function getRandomWord() {
-
-    const i = Math.floor(Math.random() * words.length);
+    const i = Math.floor(Math.random() * easy.length);
     const randomWord = words[i];
 
     setRandomWord(randomWord);
