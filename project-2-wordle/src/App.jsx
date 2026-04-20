@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import words from "../../words.js";
 import { easy, medium, hard } from "../../words.js";
+import words from "../../words.js";
 import LetterButtons from "./components/LetterButtons.jsx";
 import Answer from "./components/Answer.jsx";
 import Progress from "./components/Progress.jsx";
@@ -15,7 +15,7 @@ function App() {
 
   // COUNT THE NUMBER OF GUESSES THE USER HAS MADE
   const guessCount = answers.length;
-  console.log(`Number of guesses: ${guessCount}`);
+
 
   useEffect(getRandomWord, [restartGame]);
 
@@ -42,7 +42,6 @@ function App() {
     e.preventDefault();
 
     const guess = userInput;
-    console.log(randomWord);
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (!words.includes(guess)) {
@@ -53,18 +52,17 @@ function App() {
     }
 
     // CHECK IF THE USER HAS ALREADY REACHED THE MAXIMUM NUMBER OF GUESSES (6)
-    if (guessCount >= 6) {
+    if (guessCount > 5) {
       alert(`Game over! The word was "${randomWord}". Starting a new game...`);
       setAnswers([]);
+      setUserInput("");
+      setEnableSubmitButton(false);
       setRestartGame(prevValue => !prevValue);
       return;
     }
 
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
-    setAnswers(prevAnswers => {
-      const userAnswers = [...prevAnswers, guess];
-      return userAnswers;
-    });
+    setAnswers(prevAnswers => [...prevAnswers, guess]);
 
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
@@ -78,6 +76,51 @@ function App() {
     // CLEAR THE INPUT FIELD AND DISABLE THE SUBMIT BUTTON
     setUserInput("");
     setEnableSubmitButton(false);
+
+    console.log(randomWord); // FOR TESTING PURPOSES ONLY --- IGNORE ---
+  }
+
+  // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
+  function getGuessColors(guess) {
+
+    // INITIALIZE AN ARRAY TO HOLD THE COLOR FOR EACH LETTER IN THE GUESS, DEFAULTING TO BLACK
+    const colors = Array(guess.length).fill('black');
+
+    // CREATE A COPY OF THE RANDOM WORD AS AN ARRAY TO TRACK USED LETTERS
+    const randomWordLetters = randomWord.split("");
+
+    // PASS 1: CHECK FOR CORRECT LETTERS IN THE CORRECT POSITION (GREEN)
+    for (let i = 0; i < guess.length; i++) {
+      if (guess[i] === randomWordLetters[i]) {
+        // MARK THIS LETTER AS GREEN
+        colors[i] = 'green';
+
+        // MARK THIS LETTER AS AN EMPTY STRING TO AVOID DUPLICATE MATCHES IN THE NEXT PASS
+        randomWordLetters[i] = '';
+      }
+    }
+
+    // PASS 2: CHECK FOR CORRECT LETTERS IN THE WRONG POSITION (ORANGE)
+    for (let i = 0; i < guess.length; i++) {
+
+      // SKIP LETTERS ALREADY MARKED AS GREEN
+      if (colors[i] === 'green') continue;
+
+      // RETURNS THE INDEX OF THE FIRST OCCURRENCE OF THE LETTER IN THE REMAINING LETTERS ARRAY
+      const letterIndex = randomWordLetters.indexOf(guess[i]);
+
+      // IF THERE IS A MATCH, MARK THE LETTER AS ORANGE
+      if (letterIndex !== -1) {
+        // MARK THIS LETTER AS ORANGE
+        colors[i] = 'orange';
+
+        // MARK THIS LETTER AS AN EMPTY STRING TO AVOID DUPLICATE MATCHES
+        randomWordLetters[letterIndex] = '';
+      }
+    }
+
+    // RETURNS AN ARRAY OF COLORS CORRESPONDING TO EACH LETTER IN THE GUESS
+    return colors;
   }
 
   return (
@@ -94,8 +137,8 @@ function App() {
       {startGame &&
         <main className="the-game">
           <Progress
-            randomWord={randomWord}
             answers={answers}
+            getGuessColors={getGuessColors}
           />
 
           <Answer
@@ -106,6 +149,8 @@ function App() {
           />
 
           <LetterButtons
+            answers={answers}
+            getGuessColors={getGuessColors}
           />
 
         </main>

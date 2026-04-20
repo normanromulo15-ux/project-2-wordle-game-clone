@@ -5766,3 +5766,4 @@ const hard = words.slice(difficultyChunkSize * 2);
 
 export default words;
 export { easy, medium, hard };
+
