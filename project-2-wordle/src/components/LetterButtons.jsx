@@ -1,33 +1,34 @@
-import { useState } from "react";
 import letters from "./Letters.js";
 
 function LetterButtons(props) {
-
   const { answers, getGuessColors } = props;
 
-  // OBJECT TO TRACK THE COLORS OF THE LETTER BUTTONS
+  // OBJECT TO TRACK THE COLORS OF THE LETTER BUTTONS, INITIALLY EMPTY
   const keyboardColors = {};
 
-  // COLOR STRENGTH: GREEN > ORANGE > BLACK
-  const colorStrength = { green: 3, orange: 2, black: 1 };
-
-  // STORE THE CLICKED LETTERS IN AN ARRAY
-  const [lettersClicked, setLettersClicked] = useState([]);
-
-  // FUNCTION TO HANDLE CLICKING THE LETTER BUTTONS
-  function handleLetterButtonClick(e) {
-    const { value } = e.target;
-    console.log(keyboardColors); // FOR TESTING PURPOSES ONLY --- IGNORE ---
-  }
+  // COLOR RANK: GREEN > ORANGE > BLACK
+  const rank = { green: 3, orange: 2, black: 1 };
 
   // LOOP THROUGH THE USER'S GUESSES TO DETERMINE THE COLOR OF EACH LETTER BUTTON
   answers.forEach(guess => {
-    const colors = getGuessColors(guess);
+    const colors = getGuessColors(guess); // RETURNS AN ARRAY CONTAINING ['green', 'orange', 'black', ...]
 
     guess.split("").forEach((letter, index) => {
-      keyboardColors[letter] = colors[index];
+      const currentColor = keyboardColors[letter];
+      const newColor = colors[index];
+
+      // ONLY UPDATE THE COLOR IF IT IS A NEW COLOR OR A STRONGER COLOR (GREEN > ORANGE > BLACK)
+      if (!currentColor || (rank[newColor] > rank[currentColor])) {
+        keyboardColors[letter] = newColor;
+      }
     })
   })
+
+  function handleClickButton(e) {
+    const { value } = e.target;
+
+    console.log(value); // FOR TESTING PURPOSES ONLY --- IGNORE ---
+  }
 
   return (
     < div className="letters-container" >
@@ -41,9 +42,8 @@ function LetterButtons(props) {
               type="button"
               className="letter-button"
               value={letter}
-              onClick={handleLetterButtonClick}
-              style={{ backgroundColor: keyboardColors[letter] || 'grey' }}
-
+              style={{ backgroundColor: keyboardColors[letter] || 'rgb(115,115,115)' }}
+              onClick={handleClickButton}
             >
               {letter}
             </button>

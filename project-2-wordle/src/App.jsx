@@ -16,7 +16,6 @@ function App() {
   // COUNT THE NUMBER OF GUESSES THE USER HAS MADE
   const guessCount = answers.length;
 
-
   useEffect(getRandomWord, [restartGame]);
 
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
@@ -76,8 +75,6 @@ function App() {
     // CLEAR THE INPUT FIELD AND DISABLE THE SUBMIT BUTTON
     setUserInput("");
     setEnableSubmitButton(false);
-
-    console.log(randomWord); // FOR TESTING PURPOSES ONLY --- IGNORE ---
   }
 
   // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
