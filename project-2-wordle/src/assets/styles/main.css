@@ -113,3 +113,7 @@ button:disabled {
   background-color: black;
   color: white;
 }
+
+.letter-button:disabled{
+  opacity: 100%;
+}

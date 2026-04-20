@@ -12,6 +12,7 @@ function App() {
   const [userInput, setUserInput] = useState("");
   const [answers, setAnswers] = useState([]); // Array to store the user's guesses
   const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
+  const [reachedLimit, setReachedLimit] = useState(false);
 
   // COUNT THE NUMBER OF GUESSES THE USER HAS MADE
   const guessCount = answers.length;
@@ -33,7 +34,24 @@ function App() {
     const formattedAnswer = value.trim().toUpperCase();
 
     setUserInput(formattedAnswer);
+
     setEnableSubmitButton(formattedAnswer.length === 5);
+    setReachedLimit(formattedAnswer.length === 5);
+  }
+
+  // FUNCTION TO HANDLE CLICK LETTER BUTTON
+  function handleClickButton(e) {
+    const { value } = e.target;
+
+    setUserInput(
+      prevInput => prevInput + value // concatenate the clicked letter to the existing user input
+    );
+
+    // SETTING THE ENABLE SUBMIT BUTTON AND REACHED LIMIT TO TRUE WHEN THE USER INPUT REACHES 5 LETTERS
+    
+    // NOTE: WE SET IT TO 4 BECAUSE THE USER INPUT HAS NOT BEEN UPDATED YET WHEN THIS FUNCTION IS CALLED, SO WE CHECK FOR LENGTH 4 TO ENABLE THE SUBMIT BUTTON AND REACHED LIMIT ON THE NEXT LETTER CLICK
+    setEnableSubmitButton(userInput.length  === 4); 
+    setReachedLimit(userInput.length === 4); 
   }
 
   // FUNCTION TO HANDLE CLICK SUBMIT BUTTON
@@ -62,6 +80,8 @@ function App() {
 
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
     setAnswers(prevAnswers => [...prevAnswers, guess]);
+
+    setReachedLimit(false);
 
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
@@ -147,7 +167,9 @@ function App() {
 
           <LetterButtons
             answers={answers}
+            handleClickButton={handleClickButton}
             getGuessColors={getGuessColors}
+            reachedLimit={reachedLimit}
           />
 
         </main>

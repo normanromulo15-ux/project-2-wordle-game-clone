@@ -4,7 +4,7 @@ function Progress(props) {
   const { answers, getGuessColors } = props;
 
   return (
-    <div className="answers-display">
+    <div className="answers-display display-2">
       {
         answers.map((guess, guessIndex) => {
 
@@ -30,6 +30,9 @@ function Progress(props) {
 
         )
       }
+
+
+
     </div>
   )
 }
