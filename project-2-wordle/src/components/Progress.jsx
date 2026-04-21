@@ -4,7 +4,7 @@ function Progress(props) {
   const { answers, getGuessColors } = props;
 
   return (
-    <div className="answers-display display-2">
+    <div className="answers-display">
       {
         answers.map((guess, guessIndex) => {
 

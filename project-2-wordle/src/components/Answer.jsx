@@ -1,5 +1,5 @@
 function Answer(props) {
-  const { userInput, handleUserAnswer, handleSubmitButton, enableSubmitButton } = props;
+  const { userInput, handleUserAnswer } = props;
 
   return (
     <form className="answer-tab">
@@ -12,16 +12,6 @@ function Answer(props) {
         onChange={handleUserAnswer}
         autoFocus
       />
-
-      <button
-        className="submit-button"
-        type="submit"
-        onClick={handleSubmitButton}
-        disabled={!enableSubmitButton}
-      >
-        Enter
-      </button>
-
     </form>
   )
 }

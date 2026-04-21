@@ -34,8 +34,6 @@ function App() {
     const formattedAnswer = value.trim().toUpperCase();
 
     setUserInput(formattedAnswer);
-
-    setEnableSubmitButton(formattedAnswer.length === 5);
     setReachedLimit(formattedAnswer.length === 5);
   }
 
@@ -48,10 +46,9 @@ function App() {
     );
 
     // SETTING THE ENABLE SUBMIT BUTTON AND REACHED LIMIT TO TRUE WHEN THE USER INPUT REACHES 5 LETTERS
-    
+
     // NOTE: WE SET IT TO 4 BECAUSE THE USER INPUT HAS NOT BEEN UPDATED YET WHEN THIS FUNCTION IS CALLED, SO WE CHECK FOR LENGTH 4 TO ENABLE THE SUBMIT BUTTON AND REACHED LIMIT ON THE NEXT LETTER CLICK
-    setEnableSubmitButton(userInput.length  === 4); 
-    setReachedLimit(userInput.length === 4); 
+    setReachedLimit(userInput.length === 4);
   }
 
   // FUNCTION TO HANDLE CLICK SUBMIT BUTTON
@@ -64,7 +61,6 @@ function App() {
     if (!words.includes(guess)) {
       alert("Invalid word.");
       setUserInput("");
-      setEnableSubmitButton(false);
       return;
     }
 
@@ -73,15 +69,12 @@ function App() {
       alert(`Game over! The word was "${randomWord}". Starting a new game...`);
       setAnswers([]);
       setUserInput("");
-      setEnableSubmitButton(false);
       setRestartGame(prevValue => !prevValue);
       return;
     }
 
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
     setAnswers(prevAnswers => [...prevAnswers, guess]);
-
-    setReachedLimit(false);
 
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
@@ -92,9 +85,9 @@ function App() {
       }, 500);
     }
 
-    // CLEAR THE INPUT FIELD AND DISABLE THE SUBMIT BUTTON
+    // CLEAR THE INPUT FIELD AND DISABLE THE ENTER BUTTON
     setUserInput("");
-    setEnableSubmitButton(false);
+    setReachedLimit(false);
   }
 
   // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
@@ -140,6 +133,12 @@ function App() {
     return colors;
   }
 
+  // FUNCTION TO HANDLE DELETE BUTTON CLICK
+  function handleDeleteButton() {
+    setUserInput(prevInput => prevInput.slice(0, -1));
+    setReachedLimit(false);
+  }
+
   return (
     <div className="app">
       {!startGame &&
@@ -160,16 +159,16 @@ function App() {
 
           <Answer
             userInput={userInput}
-            enableSubmitButton={enableSubmitButton}
             handleUserAnswer={handleUserAnswer}
-            handleSubmitButton={handleSubmitButton}
           />
 
           <LetterButtons
             answers={answers}
-            handleClickButton={handleClickButton}
-            getGuessColors={getGuessColors}
             reachedLimit={reachedLimit}
+            handleClickButton={handleClickButton}
+            handleSubmitButton={handleSubmitButton}
+            handleDeleteButton={handleDeleteButton}
+            getGuessColors={getGuessColors}
           />
 
         </main>

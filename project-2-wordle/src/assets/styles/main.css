@@ -76,22 +76,38 @@ form.answer-tab > input {
   padding: 1rem;
 }
 
-button.submit-button {
-  padding: 0.5rem 1rem;
+button.enter-button, button.delete-button {
   border: none;
-  background-color: green;
-  color: white;
-  font-weight: bolder;
-  font-size: 1rem;
+  outline: 1px solid black;
+}
+
+button.delete-button {
+  font-size: 0.5rem;
+  font-weight: 600;
+}
+
+button.enter-button > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+button.enter-button:disabled {
+  opacity: 100%;
+  cursor: not-allowed;
 }
 
 button:disabled {
-  cursor: no-drop;
-  background-color: red;
+  cursor: not-allowed;
   opacity: 30%;
 }
 
 .answers-display {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.answers-display-2 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -114,6 +130,6 @@ button:disabled {
   color: white;
 }
 
-.letter-button:disabled{
+.letter-button:disabled {
   opacity: 100%;
 }
