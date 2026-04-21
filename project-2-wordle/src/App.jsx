@@ -46,8 +46,6 @@ function App() {
     );
 
     // SETTING THE ENABLE SUBMIT BUTTON AND REACHED LIMIT TO TRUE WHEN THE USER INPUT REACHES 5 LETTERS
-
-    // NOTE: WE SET IT TO 4 BECAUSE THE USER INPUT HAS NOT BEEN UPDATED YET WHEN THIS FUNCTION IS CALLED, SO WE CHECK FOR LENGTH 4 TO ENABLE THE SUBMIT BUTTON AND REACHED LIMIT ON THE NEXT LETTER CLICK
     setReachedLimit(userInput.length === 4);
   }
 
@@ -160,6 +158,7 @@ function App() {
           <Answer
             userInput={userInput}
             handleUserAnswer={handleUserAnswer}
+            handleSubmitButton={handleSubmitButton}
           />
 
           <LetterButtons

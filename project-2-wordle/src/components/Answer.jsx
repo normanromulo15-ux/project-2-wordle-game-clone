@@ -1,8 +1,11 @@
 function Answer(props) {
-  const { userInput, handleUserAnswer } = props;
+  const { userInput, handleUserAnswer, handleSubmitButton } = props;
 
   return (
-    <form className="answer-tab">
+    <form
+      className="answer-tab"
+      onSubmit={handleSubmitButton}
+    >
       <input
         placeholder="Guess the hidden 5-letter word!"
         name="user-answer"
