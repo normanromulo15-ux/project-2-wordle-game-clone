@@ -1,25 +1,45 @@
 function AnswersDisplay(props) {
-  const { userInput } = props;
+  const { userInput, answers, getGuessColors } = props;
+  const guessPerAttempt = userInput;
+  const answerRows = Array.from({ length: 6 },
+    (_, rowIndex) => {
 
-  const guess = "TESTS";
-  const answerLetters = Array(5).fill("");
-  const answerRows = Array(6).fill(answerLetters);
+      let rowValue = "";
 
-  answerRows[0] = guess.split("");
+      if (rowIndex === answers.length) {
+        rowValue = userInput;
+      }
+      else if (rowIndex < answers.length) {
+        rowValue = answers[rowIndex];
+      }
+
+      return Array.from({ length: 5 }, (_, letterIndex) => rowValue[letterIndex] ?? ""
+      );
+    }
+  );
 
   return (
     <div className="answers-display-2">
       {
-        answerRows.map((userGuess, rowIndex) =>
-          <div key={rowIndex} className="answer-row">
-            {
-              userGuess.map((letter, letterIndex) =>
-                <div key={letterIndex} className="answer-letter-box">
-                  {rowIndex}
-                </div>
-              )
-            }
-          </div>
+        answerRows.map((row, rowIndex) => {
+          const colors = getGuessColors(row);
+
+          return (
+            <div key={rowIndex} className="answer-row">
+              {
+                row.map((letter, letterIndex) =>
+                  <div
+                    key={letterIndex}
+                    className="answer-letter-box"
+                    style={{ backgroundColor: (rowIndex < answers.length) && colors[letterIndex] }}
+                  >
+                    {letter}
+                  </div>
+                )
+              }
+            </div>
+          )
+        }
         )
       }
     </div>

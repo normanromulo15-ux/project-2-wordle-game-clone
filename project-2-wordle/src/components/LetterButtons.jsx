@@ -42,6 +42,7 @@ function LetterButtons(props) {
               value={letter}
               style={{ backgroundColor: keyboardColors[letter] }}
               onClick={handleClickButton}
+              onKeyDown={handleClickButton}
               disabled={reachedLimit}
             >
               {letter}

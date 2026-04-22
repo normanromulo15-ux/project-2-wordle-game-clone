@@ -40,7 +40,6 @@ main.the-game {
   gap: 1rem;
   width: 50%;
   padding: 2rem 0;
-  overflow: hidden;
 }
 
 main.the-game > * {

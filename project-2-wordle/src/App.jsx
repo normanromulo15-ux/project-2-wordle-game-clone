@@ -42,7 +42,7 @@ function App() {
     const { value } = e.target;
 
     setUserInput(
-      prevInput => prevInput + value // concatenate the clicked letter to the existing user input
+      prevInput => prevInput + value 
     );
 
     // SETTING THE ENABLE SUBMIT BUTTON AND REACHED LIMIT TO TRUE WHEN THE USER INPUT REACHES 5 LETTERS
@@ -59,6 +59,7 @@ function App() {
     if (!words.includes(guess)) {
       alert("Invalid word.");
       setUserInput("");
+      setReachedLimit(false);
       return;
     }
 
@@ -157,7 +158,8 @@ function App() {
 
           <AnswersDisplay
             userInput={userInput}
-
+            answers={answers}
+            getGuessColors={getGuessColors}
           />
 
           { /* <Answer
