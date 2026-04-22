@@ -5758,12 +5758,6 @@ const words = [
   "pupal"
 ].map(e => e.toUpperCase().trim());
 
-// Split the ordered vocabulary list into three difficulty bands.
-const difficultyChunkSize = Math.ceil(words.length / 3);
-const easy = words.slice(0, difficultyChunkSize);
-const medium = words.slice(difficultyChunkSize, difficultyChunkSize * 2);
-const hard = words.slice(difficultyChunkSize * 2);
-
 export default words;
-export { easy, medium, hard };
+
 

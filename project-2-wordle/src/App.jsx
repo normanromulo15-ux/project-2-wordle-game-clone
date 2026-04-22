@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { easy, medium, hard } from "../../words.js";
 import words from "../../words.js";
 import LetterButtons from "./components/LetterButtons.jsx";
 import Answer from "./components/Answer.jsx";
+import AnswersDisplay from "./components/AnswersDisplay.jsx";
 import Progress from "./components/Progress.jsx";
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
 
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
   function getRandomWord() {
-    const i = Math.floor(Math.random() * easy.length);
+    const i = Math.floor(Math.random() * 2315);
     const randomWord = words[i];
 
     setRandomWord(randomWord);
@@ -49,7 +49,7 @@ function App() {
     setReachedLimit(userInput.length === 4);
   }
 
-  // FUNCTION TO HANDLE CLICK SUBMIT BUTTON
+  // FUNCTION TO HANDLE SUBMIT ANSWER
   function handleSubmitButton(e) {
     e.preventDefault();
 
@@ -150,16 +150,21 @@ function App() {
       }
       {startGame &&
         <main className="the-game">
-          <Progress
+          {/*<Progress
             answers={answers}
             getGuessColors={getGuessColors}
+          />*/}
+
+          <AnswersDisplay
+            userInput={userInput}
+
           />
 
-          <Answer
+          { /* <Answer
             userInput={userInput}
             handleUserAnswer={handleUserAnswer}
             handleSubmitButton={handleSubmitButton}
-          />
+          />*/}
 
           <LetterButtons
             answers={answers}
