@@ -1,6 +1,8 @@
 function AnswersDisplay(props) {
   const { userInput, answers, getGuessColors } = props;
+
   const guessPerAttempt = userInput;
+
   const answerRows = Array.from({ length: 6 },
     (_, rowIndex) => {
 
@@ -9,6 +11,7 @@ function AnswersDisplay(props) {
       if (rowIndex === answers.length) {
         rowValue = userInput;
       }
+      
       else if (rowIndex < answers.length) {
         rowValue = answers[rowIndex];
       }

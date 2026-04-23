@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import words from "../../words.js";
 import LetterButtons from "./components/LetterButtons.jsx";
-import Answer from "./components/Answer.jsx";
 import AnswersDisplay from "./components/AnswersDisplay.jsx";
-import Progress from "./components/Progress.jsx";
 
 function App() {
   const [startGame, setStartGame] = useState(false);
@@ -13,9 +11,7 @@ function App() {
   const [answers, setAnswers] = useState([]); // Array to store the user's guesses
   const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
   const [reachedLimit, setReachedLimit] = useState(false);
-
-  // COUNT THE NUMBER OF GUESSES THE USER HAS MADE
-  const guessCount = answers.length;
+  const [guessCount, setGuessCount] = useState(1);
 
   useEffect(getRandomWord, [restartGame]);
 
@@ -27,22 +23,12 @@ function App() {
     setRandomWord(randomWord);
   }
 
-  // FUNCTION TO HANDLE USER'S INPUT
-  function handleUserAnswer(e) {
-    const { value } = e.target;
-
-    const formattedAnswer = value.trim().toUpperCase();
-
-    setUserInput(formattedAnswer);
-    setReachedLimit(formattedAnswer.length === 5);
-  }
-
   // FUNCTION TO HANDLE CLICK LETTER BUTTON
   function handleClickButton(e) {
     const { value } = e.target;
 
     setUserInput(
-      prevInput => prevInput + value 
+      prevInput => prevInput + value
     );
 
     // SETTING THE ENABLE SUBMIT BUTTON AND REACHED LIMIT TO TRUE WHEN THE USER INPUT REACHES 5 LETTERS
@@ -57,31 +43,37 @@ function App() {
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (!words.includes(guess)) {
+
       alert("Invalid word.");
+
       setUserInput("");
       setReachedLimit(false);
-      return;
-    }
-
-    // CHECK IF THE USER HAS ALREADY REACHED THE MAXIMUM NUMBER OF GUESSES (6)
-    if (guessCount > 5) {
-      alert(`Game over! The word was "${randomWord}". Starting a new game...`);
-      setAnswers([]);
-      setUserInput("");
-      setRestartGame(prevValue => !prevValue);
       return;
     }
 
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
     setAnswers(prevAnswers => [...prevAnswers, guess]);
 
+    // INCREASE THE NUMBER OF ATTEMPT 
+    setGuessCount(prevVal => prevVal + 1);
+
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
       setTimeout(() => {
-        alert(`You guessed the word! The word was "${randomWord}". Starting a new game...`);
+        alert(`You guessed the word in ${guessCount} attempts! Starting a new game...`);
         setAnswers([]);
         setRestartGame(prevValue => !prevValue);
+        setReachedLimit(false);
+        setGuessCount(1);
       }, 500);
+    }
+
+    // THE GAME IS OVER IF THE USER HAS REACHED THE 6TH ATTEMPT AND HAS AN INCORRECT GUESS
+    else if (guessCount === 6) {
+      alert(`Game over! The word was ${randomWord}! Starting a new game...`);
+      setGuessCount(1);
+      setAnswers([]);
+      setRestartGame(prevValue => !prevValue);
     }
 
     // CLEAR THE INPUT FIELD AND DISABLE THE ENTER BUTTON
@@ -150,23 +142,14 @@ function App() {
         </button>
       }
       {startGame &&
+
         <main className="the-game">
-          {/*<Progress
-            answers={answers}
-            getGuessColors={getGuessColors}
-          />*/}
 
           <AnswersDisplay
             userInput={userInput}
             answers={answers}
             getGuessColors={getGuessColors}
           />
-
-          { /* <Answer
-            userInput={userInput}
-            handleUserAnswer={handleUserAnswer}
-            handleSubmitButton={handleSubmitButton}
-          />*/}
 
           <LetterButtons
             answers={answers}
