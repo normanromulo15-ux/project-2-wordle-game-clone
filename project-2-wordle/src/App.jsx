@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import words from "../../words.js";
 import LetterButtons from "./components/LetterButtons.jsx";
 import AnswersDisplay from "./components/AnswersDisplay.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   const [startGame, setStartGame] = useState(false);
@@ -131,36 +132,42 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div
+      className="h-screen flex flex-col items-center justify-start bg-[rgb(245,245,245)] pt-8"
+    >
       {!startGame &&
         <button
           type="button"
-          className="bg-green-500 text-xl text-white font-bold tracking-wide transition hover:scale-105 rounded-lg"
+          className="p-4 mt-40 bg-green-500 text-xl text-white font-bold tracking-wide transition hover:scale-105 rounded-4xl cursor-pointer"
           onClick={() => setStartGame(true)}
         >
           PLAY
         </button>
       }
       {startGame &&
+        <div
+          className="the-game"
+        >
+          <main
+            className="flex flex-col gap-6"
+          >
+            <AnswersDisplay
+              userInput={userInput}
+              answers={answers}
+              getGuessColors={getGuessColors}
+            />
 
-        <main className="the-game">
-
-          <AnswersDisplay
-            userInput={userInput}
-            answers={answers}
-            getGuessColors={getGuessColors}
-          />
-
-          <LetterButtons
-            answers={answers}
-            reachedLimit={reachedLimit}
-            handleClickButton={handleClickButton}
-            handleSubmitButton={handleSubmitButton}
-            handleDeleteButton={handleDeleteButton}
-            getGuessColors={getGuessColors}
-          />
-
-        </main>
+            <LetterButtons
+              answers={answers}
+              reachedLimit={reachedLimit}
+              getGuessColors={getGuessColors}
+              handleClickButton={handleClickButton}
+              handleSubmitButton={handleSubmitButton}
+              handleDeleteButton={handleDeleteButton}
+            />
+          </main>
+          <Footer />
+        </div>
       }
     </div>
   )
