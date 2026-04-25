@@ -135,7 +135,7 @@ function App() {
       {!startGame &&
         <button
           type="button"
-          className="starting-button"
+          className="bg-green-500 text-xl text-white font-bold tracking-wide transition hover:scale-105 rounded-lg"
           onClick={() => setStartGame(true)}
         >
           PLAY

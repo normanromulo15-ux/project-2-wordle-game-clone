@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,12 +15,6 @@ button {
   padding: 1rem;
   cursor: pointer;
   border-radius: 1rem;
-}
-
-.starting-button {
-  background-color: green;
-  color: white;
-  border: 3px solid black;
 }
 
 .app {
