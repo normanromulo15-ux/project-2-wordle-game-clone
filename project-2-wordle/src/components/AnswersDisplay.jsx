@@ -22,7 +22,7 @@ function AnswersDisplay(props) {
   );
 
   return (
-    <div className="answers-display-2">
+    <div className="answers-display">
       {
         answerRows.map((row, rowIndex) => {
           const colors = getGuessColors(row);
