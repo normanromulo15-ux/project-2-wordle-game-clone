@@ -5,16 +5,51 @@ import AnswersDisplay from "./components/AnswersDisplay.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
+  // STATES
   const [startGame, setStartGame] = useState(false);
   const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
-  const [answers, setAnswers] = useState([]); // Array to store the user's guesses
+  const [answers, setAnswers] = useState([]);
   const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
-  const [reachedLimit, setReachedLimit] = useState(false);
   const [guessCount, setGuessCount] = useState(1);
 
+  const reachedLimit = userInput.length === 5;
+
   useEffect(getRandomWord, [restartGame]);
+
+  useEffect(() => {
+    if (!startGame) return;
+
+    window.addEventListener("keydown", handleKeyboardInput);
+    console.log("useEffect() triggered");
+
+    function handleKeyboardInput(e) {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const { key } = e;
+
+      if (/^[a-z]$/i.test(key)) {
+        addLetter(key);
+        return;
+      }
+
+      if (key === "Enter") {
+        e.preventDefault();
+        submitGuess();
+      }
+
+      if (key === "Backspace") {
+        e.preventDefault();
+        handleBackspace();
+      }
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyboardInput);
+      console.log("useEffect() cleanup function triggered");
+    }
+  }, [startGame, userInput]);
 
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
   function getRandomWord() {
@@ -24,31 +59,16 @@ function App() {
     setRandomWord(randomWord);
   }
 
-  // FUNCTION TO HANDLE CLICK LETTER BUTTON
-  function handleClickButton(e) {
-    const { value } = e.target;
-
-    setUserInput(
-      prevInput => prevInput + value
-    );
-
-    // SETTING THE ENABLE SUBMIT BUTTON AND REACHED LIMIT TO TRUE WHEN THE USER INPUT REACHES 5 LETTERS
-    setReachedLimit(userInput.length === 4);
-  }
-
-  // FUNCTION TO HANDLE SUBMIT ANSWER
-  function handleSubmitButton(e) {
-    e.preventDefault();
+  // FUNCTION TO HANDLE THE GAME LOGIC
+  function submitGuess() {
+    if (userInput.length !== 5) return;
 
     const guess = userInput;
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (!words.includes(guess)) {
-
       alert("Invalid word.");
-
       setUserInput("");
-      setReachedLimit(false);
       return;
     }
 
@@ -64,7 +84,6 @@ function App() {
         alert(`You guessed the word in ${guessCount} attempts! Starting a new game...`);
         setAnswers([]);
         setRestartGame(prevValue => !prevValue);
-        setReachedLimit(false);
         setGuessCount(1);
       }, 500);
     }
@@ -77,9 +96,26 @@ function App() {
       setRestartGame(prevValue => !prevValue);
     }
 
-    // CLEAR THE INPUT FIELD AND DISABLE THE ENTER BUTTON
+    // CLEAR THE INPUT FIELD 
     setUserInput("");
-    setReachedLimit(false);
+  }
+
+  // FUNCTION TO ADD A LETTER
+  function addLetter(letter) {
+    setUserInput(prevInput => {
+      return prevInput + letter.toUpperCase();
+    });
+  }
+
+  // FUNCTION TO HANDLE CLICK LETTER BUTTON
+  function handleClickButton(e) {
+    addLetter(e.target.value);
+  }
+
+  // FUNCTION TO HANDLE SUBMIT ANSWER
+  function handleSubmitGuess(e) {
+    e.preventDefault();
+    submitGuess();
   }
 
   // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
@@ -126,14 +162,13 @@ function App() {
   }
 
   // FUNCTION TO HANDLE DELETE BUTTON CLICK
-  function handleDeleteButton() {
+  function handleBackspace() {
     setUserInput(prevInput => prevInput.slice(0, -1));
-    setReachedLimit(false);
   }
 
   return (
     <div
-      className="h-screen flex flex-col items-center justify-start bg-[rgb(245,245,245)] pt-8"
+      className="h-dvh flex flex-col items-center justify-start bg-[rgb(245,245,245)] pt-12"
     >
       {!startGame &&
         <button
@@ -162,8 +197,8 @@ function App() {
               reachedLimit={reachedLimit}
               getGuessColors={getGuessColors}
               handleClickButton={handleClickButton}
-              handleSubmitButton={handleSubmitButton}
-              handleDeleteButton={handleDeleteButton}
+              handleSubmitGuess={handleSubmitGuess}
+              handleBackspace={handleBackspace}
             />
           </main>
           <Footer />
