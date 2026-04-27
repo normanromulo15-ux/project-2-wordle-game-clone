@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import words from "../../words.js";
+import StartPage from "./components/StartPage.jsx";
 import LetterButtons from "./components/LetterButtons.jsx";
 import AnswersDisplay from "./components/AnswersDisplay.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
-  // STATES
   const [startGame, setStartGame] = useState(false);
   const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
   const [answers, setAnswers] = useState([]);
-  const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
   const [guessCount, setGuessCount] = useState(1);
+  const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
 
   const reachedLimit = userInput.length === 5;
 
@@ -22,7 +22,6 @@ function App() {
     if (!startGame) return;
 
     window.addEventListener("keydown", handleKeyboardInput);
-    console.log("useEffect() triggered");
 
     function handleKeyboardInput(e) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -34,12 +33,12 @@ function App() {
         return;
       }
 
-      if (key === "Enter") {
+      else if (key === "Enter") {
         e.preventDefault();
         submitGuess();
       }
 
-      if (key === "Backspace") {
+      else if (key === "Backspace") {
         e.preventDefault();
         handleBackspace();
       }
@@ -47,13 +46,17 @@ function App() {
 
     return () => {
       window.removeEventListener("keydown", handleKeyboardInput);
-      console.log("useEffect() cleanup function triggered");
     }
   }, [startGame, userInput]);
 
+  // FUNCTION TO START THE GAME
+  function handleStartGame() {
+    setStartGame(true);
+  }
+
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
   function getRandomWord() {
-    const i = Math.floor(Math.random() * 2315);
+    const i = Math.floor(Math.random() * 2500);
     const randomWord = words[i];
 
     setRandomWord(randomWord);
@@ -102,9 +105,7 @@ function App() {
 
   // FUNCTION TO ADD A LETTER
   function addLetter(letter) {
-    setUserInput(prevInput => {
-      return prevInput + letter.toUpperCase();
-    });
+    setUserInput(prevInput => prevInput + letter.toUpperCase());
   }
 
   // FUNCTION TO HANDLE CLICK LETTER BUTTON
@@ -168,16 +169,12 @@ function App() {
 
   return (
     <div
-      className="h-dvh flex flex-col items-center justify-start bg-[rgb(245,245,245)] pt-12"
+      className={startGame ? `h-dvh flex flex-col items-center justify-center bg-[rgb(245,245,245)] ` : null}
     >
       {!startGame &&
-        <button
-          type="button"
-          className="p-4 mt-40 bg-green-500 text-xl text-white font-bold tracking-wide transition hover:scale-105 rounded-4xl cursor-pointer"
-          onClick={() => setStartGame(true)}
-        >
-          PLAY
-        </button>
+        <StartPage
+          handleStartGame={handleStartGame}
+        />
       }
       {startGame &&
         <div
