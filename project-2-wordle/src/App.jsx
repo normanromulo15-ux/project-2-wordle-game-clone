@@ -3,6 +3,7 @@ import words from "../../words.js";
 import StartPage from "./components/StartPage.jsx";
 import LetterButtons from "./components/LetterButtons.jsx";
 import AnswersDisplay from "./components/AnswersDisplay.jsx";
+import InvalidWordMessage from "./components/InvalidWordMessage.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
   const [userInput, setUserInput] = useState("");
   const [answers, setAnswers] = useState([]);
   const [guessCount, setGuessCount] = useState(1);
-  const [restartGame, setRestartGame] = useState(false) // Dependency data to restart the game
+  const [invalidWordMessage, setInvalidWordMessage] = useState(false);
+  const [restartGame, setRestartGame] = useState(false); // Dependency data to restart the game
 
   const reachedLimit = userInput.length === 5;
 
@@ -70,8 +72,10 @@ function App() {
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (!words.includes(guess)) {
-      alert("Invalid word.");
-      setUserInput("");
+      setInvalidWordMessage(true);
+      setTimeout(() => {
+        setInvalidWordMessage(false);
+      }, 1000);
       return;
     }
 
@@ -88,7 +92,7 @@ function App() {
         setAnswers([]);
         setRestartGame(prevValue => !prevValue);
         setGuessCount(1);
-      }, 500);
+      }, 400);
     }
 
     // THE GAME IS OVER IF THE USER HAS REACHED THE 6TH ATTEMPT AND HAS AN INCORRECT GUESS
@@ -169,7 +173,7 @@ function App() {
 
   return (
     <div
-      className={startGame ? `h-dvh flex flex-col items-center justify-center bg-[rgb(245,245,245)] ` : null}
+      className={startGame && `h-dvh flex items-center justify-center bg-[rgb(245,245,245)] `}
     >
       {!startGame &&
         <StartPage
@@ -178,8 +182,9 @@ function App() {
       }
       {startGame &&
         <div
-          className="the-game"
+          className="flex flex-col gap-6 "
         >
+          {invalidWordMessage && <InvalidWordMessage />}
           <main
             className="flex flex-col gap-6"
           >

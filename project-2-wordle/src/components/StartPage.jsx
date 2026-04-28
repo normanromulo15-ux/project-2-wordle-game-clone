@@ -5,7 +5,7 @@ function StartPage(props) {
 
   return (
     <section
-      className="flex flex-col gap-12 items-center justify-center h-dvh"
+      className="flex flex-col gap-12 items-center justify-center h-dvh  bg-[rgb(245,245,245)]"
     >
       <div
         className="flex gap-1"

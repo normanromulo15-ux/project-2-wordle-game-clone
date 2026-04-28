@@ -3,7 +3,7 @@ function Footer() {
 
   return (
     <footer
-      className="text-center text-base mt-6"
+      className="text-center text-base"
     >
       © {currentYear} The Wordle App
     </footer>
