@@ -4,6 +4,8 @@ import StartPage from "./components/StartPage.jsx";
 import LetterButtons from "./components/LetterButtons.jsx";
 import AnswersDisplay from "./components/AnswersDisplay.jsx";
 import InvalidWordMessage from "./components/InvalidWordMessage.jsx";
+import CorrectGuessMessage from "./components/CorrectGuessMessage.jsx";
+import GameOverMessage from "./components/GameOverMessage.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
@@ -12,11 +14,13 @@ function App() {
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
   const [answers, setAnswers] = useState([]);
-  const [guessCount, setGuessCount] = useState(1);
-  const [invalidWordMessage, setInvalidWordMessage] = useState(false);
-  const [restartGame, setRestartGame] = useState(false); // Dependency data to restart the game
+  const [displayInvalidWordMessage, setDisplayInvalidWordMessage] = useState(false);
+  const [displayCorrectGuessMessage, setDisplayCorrectGuessMessage] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [restartGame, setRestartGame] = useState(false);
 
   const reachedLimit = userInput.length === 5;
+  const guessCount = answers.length + 1;
 
   useEffect(getRandomWord, [restartGame]);
 
@@ -58,7 +62,7 @@ function App() {
 
   // FUNCTION TO FETCH THE RANDOM WORD TO BE GUESSED
   function getRandomWord() {
-    const i = Math.floor(Math.random() * 2500);
+    const i = Math.floor(Math.random() * 2315);
     const randomWord = words[i];
 
     setRandomWord(randomWord);
@@ -69,38 +73,25 @@ function App() {
     if (userInput.length !== 5) return;
 
     const guess = userInput;
+    console.log(randomWord);
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (!words.includes(guess)) {
-      setInvalidWordMessage(true);
-      setTimeout(() => {
-        setInvalidWordMessage(false);
-      }, 1000);
+      handleGuessValidity();
       return;
     }
 
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
     setAnswers(prevAnswers => [...prevAnswers, guess]);
 
-    // INCREASE THE NUMBER OF ATTEMPT 
-    setGuessCount(prevVal => prevVal + 1);
-
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
-      setTimeout(() => {
-        alert(`You guessed the word in ${guessCount} attempts! Starting a new game...`);
-        setAnswers([]);
-        setRestartGame(prevValue => !prevValue);
-        setGuessCount(1);
-      }, 400);
+      handleCorrectGuessMessage();
     }
 
     // THE GAME IS OVER IF THE USER HAS REACHED THE 6TH ATTEMPT AND HAS AN INCORRECT GUESS
     else if (guessCount === 6) {
-      alert(`Game over! The word was ${randomWord}! Starting a new game...`);
-      setGuessCount(1);
-      setAnswers([]);
-      setRestartGame(prevValue => !prevValue);
+      handleGameOver();
     }
 
     // CLEAR THE INPUT FIELD 
@@ -121,6 +112,14 @@ function App() {
   function handleSubmitGuess(e) {
     e.preventDefault();
     submitGuess();
+  }
+
+  // FUNCTION TO HANDLE THE USER'S GUESS VALIDITY 
+  function handleGuessValidity() {
+    setDisplayInvalidWordMessage(true);
+    setTimeout(() => {
+      setDisplayInvalidWordMessage(false);
+    }, 1000);
   }
 
   // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
@@ -171,6 +170,29 @@ function App() {
     setUserInput(prevInput => prevInput.slice(0, -1));
   }
 
+  // FUNCTION TO DISPLAY THE CORRECT GUESS MESSAGE
+  function handleCorrectGuessMessage() {
+    setTimeout(() => {
+      setDisplayCorrectGuessMessage(true);
+    }, 400);
+  }
+
+  // FUNCTION TO DISPLAY THE GAME OVER MESSAGE
+  function handleGameOver() {
+    setTimeout(() => {
+      setGameOver(true);
+    }, 300);
+  }
+
+  // FUNCTION TO RESTART THE GAME 
+  function handleRestartGame() {
+    setGameOver(false);
+    setDisplayCorrectGuessMessage(false);
+    setUserInput("");
+    setAnswers([]);
+    setRestartGame(prevValue => !prevValue);
+  }
+
   return (
     <div
       className={startGame && `h-dvh flex items-center justify-center bg-[rgb(245,245,245)] `}
@@ -184,7 +206,21 @@ function App() {
         <div
           className="flex flex-col gap-6 "
         >
-          {invalidWordMessage && <InvalidWordMessage />}
+          {displayCorrectGuessMessage &&
+            <CorrectGuessMessage
+              randomWord={randomWord}
+              handleRestartGame={handleRestartGame}
+            />
+          }
+          {displayInvalidWordMessage &&
+            <InvalidWordMessage />
+          }
+          {gameOver &&
+            <GameOverMessage
+              randomWord={randomWord}
+              handleRestartGame={handleRestartGame}
+            />
+          }
           <main
             className="flex flex-col gap-6"
           >
@@ -193,7 +229,6 @@ function App() {
               answers={answers}
               getGuessColors={getGuessColors}
             />
-
             <LetterButtons
               answers={answers}
               reachedLimit={reachedLimit}
@@ -205,6 +240,7 @@ function App() {
           </main>
           <Footer />
         </div>
+
       }
     </div>
   )

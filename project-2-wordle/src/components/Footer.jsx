@@ -5,7 +5,7 @@ function Footer() {
     <footer
       className="text-center text-base"
     >
-      © {currentYear} The Wordle App
+      © {currentYear} The Wordle App by Norman
     </footer>
   )
 }

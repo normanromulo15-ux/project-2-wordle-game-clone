@@ -36,7 +36,7 @@ function StartPage(props) {
 
       <button
         type="button"
-        className="p-4 px-8 bg-green-600 text-xl text-white font-bold tracking-wide transition hover:scale-105 rounded-4xl cursor-pointer"
+        className="p-4 px-8 bg-green-600 text-xl text-white font-bold tracking-wide transition hover:scale-110 rounded-4xl cursor-pointer"
         onClick={handleStartGame}
       >
         PLAY
