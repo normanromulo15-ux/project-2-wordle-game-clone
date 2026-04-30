@@ -5,7 +5,8 @@ function StartPage(props) {
 
   return (
     <section
-      className="flex flex-col gap-12 items-center justify-center h-dvh  bg-[rgb(245,245,245)]"
+      className="bg-[rgb(245,245,245)] flex flex-col items-center justify-center h-dvh 
+                lg:gap-12"
     >
       <div
         className="flex gap-1"
@@ -23,7 +24,8 @@ function StartPage(props) {
             return (
               <div
                 key={i}
-                className={`${bgColor} text-white text-4xl font-bold p-4`}
+                className={`${bgColor} text-white 
+                          lg:text-4xl lg:font-bold lg:p-4`}
               >
                 {e}
               </div>
@@ -36,7 +38,8 @@ function StartPage(props) {
 
       <button
         type="button"
-        className="p-4 px-8 bg-green-600 text-xl text-white font-bold tracking-wide transition hover:scale-110 rounded-4xl cursor-pointer"
+        className="bg-green-600 text-white cursor-pointer tracking-wide transition hover:scale-110 
+                  lg:p-4 lg:px-8  lg:text-xl lg:font-bold  lg:rounded-4xl"
         onClick={handleStartGame}
       >
         PLAY
