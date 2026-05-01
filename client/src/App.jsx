@@ -197,7 +197,7 @@ function App() {
     <div className={startGame && `bg-[rgb(245,245,245)] h-dvh flex justify-center`}>
       {!startGame && <StartPage handleStartGame={handleStartGame} />}
       {startGame &&
-        <div className="flex flex-col 
+        <div className="flex flex-col w-dvw
                       lg:py-8">
           {displayCorrectGuessMessage &&
             <CorrectGuessMessage
@@ -214,8 +214,11 @@ function App() {
               handleRestartGame={handleRestartGame}
             />
           }
-          <main className="flex-1 flex flex-col 
-                          lg:gap-8">
+          <main className="flex-1 flex flex-col justify-evenly px-5
+                          md:px-20
+                          lg:gap-8
+                          xl:px-120
+                          ">
             <AnswersDisplay
               userInput={userInput}
               answers={answers}

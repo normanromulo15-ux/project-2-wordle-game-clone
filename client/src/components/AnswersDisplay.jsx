@@ -37,8 +37,11 @@ function AnswersDisplay(props) {
                 row.map((letter, letterIndex) =>
                   <div
                     key={letterIndex}
-                    className="bg-black text-white flex justify-center items-center 
-                              lg:w-12 lg:h-12 lg:text-3xl lg:font-extrabold"
+                    className="bg-black text-white flex justify-center items-center w-10 h-10 font-bold text-xl
+                              md:font-extrabold md:w-20 md:h-20 md:text-3xl
+                
+                              xl:w-12 xl:h-12
+                              "
                     style={{ backgroundColor: (rowIndex < answers.length) && colors[letterIndex] }}
                   >
                     {letter}

@@ -29,8 +29,10 @@ function LetterButtons(props) {
 
   return (
     < section
-      className="grid grid-cols-10 grid-rows-3 border-black border-solid border-2 
-                lg:rounded-4xl lg:gap-2 lg:p-6"
+      className="grid grid-cols-10 grid-rows-3 border-black border-solid border-2 gap-1 p-4
+       rounded-3xl
+       md:gap-2 md:p-5
+                lg:rounded-4xl lg:gap-2"
     >
       {
         // RENDER THE LETTER BUTTONS
@@ -40,8 +42,10 @@ function LetterButtons(props) {
               name="letter-button"
               key={letter}
               type="button"
-              className={`cursor-pointer bg-[#A9A9A9] text-white hover:bg-[#5A5A5A] disabled:opacity-100 
-                        lg:p-4 lg:font-bold lg:rounded-2xl 
+              className={`cursor-pointer bg-[#A9A9A9] text-white hover:bg-[#5A5A5A] disabled:opacity-100 font-bold p-2 rounded-lg flex items-center justify-center text-base
+                        md:text-2xl md:rounded-xl md:p-4
+                         lg:rounded-2xl 
+                        xl:text-lg
                         ${index >= 20 && "order-2"} `}
               value={letter}
               style={{ backgroundColor: keyboardColors[letter] }}
@@ -56,7 +60,8 @@ function LetterButtons(props) {
       }
       <button
         type="button"
-        className={`order-1 cursor-pointer bg-[#A9A9A9] disabled:cursor-not-allowed  
+        className={`order-1 cursor-pointer bg-[#A9A9A9] disabled:cursor-not-allowed rounded-lg flex items-center justify-center p-1 
+          md:rounded-xl
                   lg:p-2 lg:rounded-2xl 
                   ${reachedLimit && "bg-green-500"} flex items-center justify-center `}
         onClick={handleSubmitGuess}
@@ -72,7 +77,8 @@ function LetterButtons(props) {
       </button>
       <button
         type="button"
-        className="order-3 cursor-pointer bg-[#A9A9A9] flex items-center justify-center 
+        className="order-3 cursor-pointer bg-[#A9A9A9] flex items-center justify-center p-1 rounded-lg
+        md:rounded-xl
                   lg:p-2 lg:rounded-2xl"
         onClick={handleBackspace}
       >
