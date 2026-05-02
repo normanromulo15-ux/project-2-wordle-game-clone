@@ -4,8 +4,6 @@ import letters from "./Letters.js";
 function LetterButtons(props) {
   const { answers, getGuessColors, reachedLimit, handleClickButton, handleSubmitGuess, handleBackspace } = props;
 
-  const clickedLetters = [];
-
   // OBJECT TO TRACK THE COLORS OF THE LETTER BUTTONS, INITIALLY EMPTY
   const keyboardColors = {};
 
@@ -29,10 +27,10 @@ function LetterButtons(props) {
 
   return (
     < section
-      className="grid grid-cols-10 grid-rows-3 border-black border-solid border-2 gap-1 p-4
+      className="grid grid-cols-10 grid-rows-3 border-black border-solid border-2 gap-1 p-4 mx-5 
        rounded-3xl
-       md:gap-2 md:p-5
-                lg:rounded-4xl lg:gap-2"
+       md:gap-2 md:p-5 md:mx-20
+                lg:rounded-4xl lg:gap-2 xl:mx-100"
     >
       {
         // RENDER THE LETTER BUTTONS

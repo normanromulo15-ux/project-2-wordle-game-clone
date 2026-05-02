@@ -73,7 +73,6 @@ function App() {
     if (userInput.length !== 5) return;
 
     const guess = userInput;
-    console.log(randomWord);
 
     // CHECK IF THE INPUT WORD IS A VALID 5-LETTER ENGLISH WORD
     if (!words.includes(guess)) {
@@ -214,11 +213,7 @@ function App() {
               handleRestartGame={handleRestartGame}
             />
           }
-          <main className="flex-1 flex flex-col justify-evenly px-5
-                          md:px-20
-                          lg:gap-8
-                          xl:px-120
-                          ">
+          <main className="flex-1 flex flex-col justify-evenly lg:gap-8">
             <AnswersDisplay
               userInput={userInput}
               answers={answers}
