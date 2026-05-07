@@ -1,3 +1,3 @@
-const letters = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+const letters = [..."QWERTYUIOPASDFGHJKLZXCVBNM"];
 
 export default letters;

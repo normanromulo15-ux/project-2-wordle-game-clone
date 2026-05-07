@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import words from "../words.js";
 import StartPage from "./components/StartPage.jsx";
 import LetterButtons from "./components/LetterButtons.jsx";
@@ -9,18 +10,20 @@ import GameOverMessage from "./components/GameOverMessage.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
+  const API_URL = `http://localhost:3000`;
   const [startGame, setStartGame] = useState(false);
-  const [enableSubmitButton, setEnableSubmitButton] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
   const [answers, setAnswers] = useState([]);
-  const [displayInvalidWordMessage, setDisplayInvalidWordMessage] = useState(false);
-  const [displayCorrectGuessMessage, setDisplayCorrectGuessMessage] = useState(false);
+  const [displayInvalidWordMessage, setDisplayInvalidWordMessage] =
+    useState(false);
+  const [displayCorrectGuessMessage, setDisplayCorrectGuessMessage] =
+    useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [restartGame, setRestartGame] = useState(false);
 
   const reachedLimit = userInput.length === 5;
-  const guessCount = answers.length + 1;
+  let guessCount = answers.length + 1;
 
   useEffect(getRandomWord, [restartGame]);
 
@@ -37,22 +40,16 @@ function App() {
       if (/^[a-z]$/i.test(key)) {
         addLetter(key);
         return;
-      }
-
-      else if (key === "Enter") {
+      } else if (key === "Enter") {
         e.preventDefault();
         submitGuess();
-      }
-
-      else if (key === "Backspace") {
+      } else if (key === "Backspace") {
         e.preventDefault();
         handleBackspace();
       }
     }
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyboardInput);
-    }
+    return () => window.removeEventListener("keydown", handleKeyboardInput);
   }, [startGame, userInput]);
 
   // FUNCTION TO START THE GAME
@@ -80,8 +77,10 @@ function App() {
       return;
     }
 
+    console.log(randomWord);
+
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
-    setAnswers(prevAnswers => [...prevAnswers, guess]);
+    setAnswers((prevAnswers) => [...prevAnswers, guess]);
 
     // CHECK IF THE USER'S GUESS IS CORRECT
     if (guess === randomWord) {
@@ -93,13 +92,13 @@ function App() {
       handleGameOver();
     }
 
-    // CLEAR THE INPUT FIELD 
+    // CLEAR THE INPUT FIELD
     setUserInput("");
   }
 
   // FUNCTION TO ADD A LETTER
   function addLetter(letter) {
-    setUserInput(prevInput => prevInput + letter.toUpperCase());
+    setUserInput((prevInput) => prevInput + letter.toUpperCase());
   }
 
   // FUNCTION TO HANDLE CLICK LETTER BUTTON
@@ -113,7 +112,7 @@ function App() {
     submitGuess();
   }
 
-  // FUNCTION TO HANDLE THE USER'S GUESS VALIDITY 
+  // FUNCTION TO HANDLE THE USER'S GUESS VALIDITY
   function handleGuessValidity() {
     setDisplayInvalidWordMessage(true);
     setTimeout(() => {
@@ -123,9 +122,8 @@ function App() {
 
   // FUNCTION TO DISPLAY THE USER'S GUESSES WITH COLOR-CODED BACKGROUND
   function getGuessColors(guess) {
-
     // INITIALIZE AN ARRAY TO HOLD THE COLOR FOR EACH LETTER IN THE GUESS, DEFAULTING TO BLACK
-    const colors = Array(guess.length).fill('black');
+    const colors = Array(guess.length).fill("black");
 
     // CREATE A COPY OF THE RANDOM WORD AS AN ARRAY TO TRACK USED LETTERS
     const randomWordLetters = randomWord.split("");
@@ -134,18 +132,17 @@ function App() {
     for (let i = 0; i < guess.length; i++) {
       if (guess[i] === randomWordLetters[i]) {
         // MARK THIS LETTER AS GREEN
-        colors[i] = 'green';
+        colors[i] = "green";
 
         // MARK THIS LETTER AS AN EMPTY STRING TO AVOID DUPLICATE MATCHES IN THE NEXT PASS
-        randomWordLetters[i] = '';
+        randomWordLetters[i] = "";
       }
     }
 
     // PASS 2: CHECK FOR CORRECT LETTERS IN THE WRONG POSITION (ORANGE)
     for (let i = 0; i < guess.length; i++) {
-
       // SKIP LETTERS ALREADY MARKED AS GREEN
-      if (colors[i] === 'green') continue;
+      if (colors[i] === "green") continue;
 
       // RETURNS THE INDEX OF THE FIRST OCCURRENCE OF THE LETTER IN THE REMAINING LETTERS ARRAY
       const letterIndex = randomWordLetters.indexOf(guess[i]);
@@ -153,10 +150,10 @@ function App() {
       // IF THERE IS A MATCH, MARK THE LETTER AS ORANGE
       if (letterIndex !== -1) {
         // MARK THIS LETTER AS ORANGE
-        colors[i] = 'orange';
+        colors[i] = "orange";
 
         // MARK THIS LETTER AS AN EMPTY STRING TO AVOID DUPLICATE MATCHES
-        randomWordLetters[letterIndex] = '';
+        randomWordLetters[letterIndex] = "";
       }
     }
 
@@ -166,7 +163,7 @@ function App() {
 
   // FUNCTION TO HANDLE DELETE BUTTON CLICK
   function handleBackspace() {
-    setUserInput(prevInput => prevInput.slice(0, -1));
+    setUserInput((prevInput) => prevInput.slice(0, -1));
   }
 
   // FUNCTION TO DISPLAY THE CORRECT GUESS MESSAGE
@@ -174,45 +171,65 @@ function App() {
     setTimeout(() => {
       setDisplayCorrectGuessMessage(true);
     }, 400);
+
+    submitUserScore();
   }
 
   // FUNCTION TO DISPLAY THE GAME OVER MESSAGE
   function handleGameOver() {
+    guessCount = 0;
+
     setTimeout(() => {
       setGameOver(true);
     }, 300);
+
+    submitUserScore();
   }
 
-  // FUNCTION TO RESTART THE GAME 
+  // FUNCTION TO RESTART THE GAME
   function handleRestartGame() {
     setGameOver(false);
     setDisplayCorrectGuessMessage(false);
     setUserInput("");
     setAnswers([]);
-    setRestartGame(prevValue => !prevValue);
+    setRestartGame((prevValue) => !prevValue);
+  }
+
+  // ASYNC FUNCTION TO PASS THE USER'S RATING AFTER THE GAME ENDS
+  async function submitUserScore() {
+    const attemptData = { attempt: guessCount };
+
+    try {
+      const response = await axios.post(`${API_URL}/stats`, attemptData);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error.stack);
+    }
   }
 
   return (
-    <div className={startGame && `bg-[rgb(245,245,245)] h-dvh flex justify-center`}>
+    <div
+      className={startGame && `bg-[rgb(245,245,245)] h-dvh flex justify-center`}
+    >
       {!startGame && <StartPage handleStartGame={handleStartGame} />}
-      {startGame &&
-        <div className="flex flex-col w-dvw
-                      lg:py-8">
-          {displayCorrectGuessMessage &&
+      {startGame && (
+        <div
+          className="flex flex-col w-dvw
+                      lg:py-8"
+        >
+          {displayCorrectGuessMessage && (
             <CorrectGuessMessage
               randomWord={randomWord}
               handleRestartGame={handleRestartGame}
             />
-          }
-          {displayInvalidWordMessage &&
-            <InvalidWordMessage />
-          }
-          {gameOver &&
+          )}
+          {displayInvalidWordMessage && <InvalidWordMessage />}
+          {gameOver && (
             <GameOverMessage
               randomWord={randomWord}
               handleRestartGame={handleRestartGame}
             />
-          }
+          )}
           <main className="flex-1 flex flex-col justify-evenly lg:gap-8">
             <AnswersDisplay
               userInput={userInput}
@@ -230,9 +247,9 @@ function App() {
           </main>
           <Footer />
         </div>
-      }
+      )}
     </div>
-  )
+  );
 }
 
 export default App;
