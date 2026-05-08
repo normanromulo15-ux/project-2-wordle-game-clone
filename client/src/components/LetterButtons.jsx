@@ -1,5 +1,4 @@
-import { useState } from "react";
-import letters from "./Letters.js";
+import letters from "./js_files/Letters.js";
 
 function LetterButtons(props) {
   const { answers, getGuessColors, reachedLimit, handleClickButton, handleSubmitGuess, handleBackspace } = props;

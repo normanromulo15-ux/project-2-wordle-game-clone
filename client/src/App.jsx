@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import words from "../words.js";
+import words from "./components/js_files/words.js";
 import StartPage from "./components/StartPage.jsx";
 import LetterButtons from "./components/LetterButtons.jsx";
 import AnswersDisplay from "./components/AnswersDisplay.jsx";
-import InvalidWordMessage from "./components/InvalidWordMessage.jsx";
-import CorrectGuessMessage from "./components/CorrectGuessMessage.jsx";
-import GameOverMessage from "./components/GameOverMessage.jsx";
+import InvalidWordMessage from "./components/user_feedback/InvalidWordMessage.jsx";
+import CorrectGuessMessage from "./components/user_feedback/CorrectGuessMessage.jsx";
+import GameOverMessage from "./components/user_feedback/GameOverMessage.jsx";
+import StatsDisplay from "./components/StatsDisplay.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
-  const API_URL = `http://localhost:3000`;
+  const BACKEND_API_URL = import.meta.env.VITE_API_URL;
   const [startGame, setStartGame] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -19,6 +20,8 @@ function App() {
     useState(false);
   const [displayCorrectGuessMessage, setDisplayCorrectGuessMessage] =
     useState(false);
+  const [displayUserStats, setDisplayUserStats] = useState(false);
+  const [userStats, setUserStats] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [restartGame, setRestartGame] = useState(false);
 
@@ -52,6 +55,11 @@ function App() {
     return () => window.removeEventListener("keydown", handleKeyboardInput);
   }, [startGame, userInput]);
 
+  // FUNCTION TO REDIRECT TO THE HOME SCREEN
+  function handleRedirectToHome() {
+    setDisplayUserStats(false);
+  }
+
   // FUNCTION TO START THE GAME
   function handleStartGame() {
     setStartGame(true);
@@ -76,8 +84,6 @@ function App() {
       handleGuessValidity();
       return;
     }
-
-    console.log(randomWord);
 
     // ADD THE USER'S GUESS TO THE ANSWERS ARRAY
     setAnswers((prevAnswers) => [...prevAnswers, guess]);
@@ -195,12 +201,26 @@ function App() {
     setRestartGame((prevValue) => !prevValue);
   }
 
-  // ASYNC FUNCTION TO PASS THE USER'S RATING AFTER THE GAME ENDS
+  // FUNCTION TO SHOW USER'S STATS
+  async function handleShowStats() {
+    setDisplayUserStats(true);
+
+    const response = await axios.get(`${BACKEND_API_URL}/stats`);
+
+    setUserStats(response.data);
+
+    console.log(response);
+  }
+
+  // FUNCTION TO PASS THE USER'S RATING AFTER THE GAME ENDS
   async function submitUserScore() {
     const attemptData = { attempt: guessCount };
 
     try {
-      const response = await axios.post(`${API_URL}/stats`, attemptData);
+      const response = await axios.post(
+        `${BACKEND_API_URL}/stats`,
+        attemptData,
+      );
       console.log(response.data);
     } catch (error) {
       console.log(error.stack);
@@ -211,16 +231,25 @@ function App() {
     <div
       className={startGame && `bg-[rgb(245,245,245)] h-dvh flex justify-center`}
     >
-      {!startGame && <StartPage handleStartGame={handleStartGame} />}
+      {!startGame && (
+        <StartPage
+          handleStartGame={handleStartGame}
+          handleShowStats={handleShowStats}
+        />
+      )}
+      {displayUserStats && (
+        <StatsDisplay
+          userStats={userStats}
+          handleRedirectToHome={handleRedirectToHome}
+        />
+      )}
       {startGame && (
-        <div
-          className="flex flex-col w-dvw
-                      lg:py-8"
-        >
+        <div className="flex flex-col w-dvw lg:py-8">
           {displayCorrectGuessMessage && (
             <CorrectGuessMessage
               randomWord={randomWord}
               handleRestartGame={handleRestartGame}
+              handleShowStats={handleShowStats}
             />
           )}
           {displayInvalidWordMessage && <InvalidWordMessage />}
@@ -228,8 +257,10 @@ function App() {
             <GameOverMessage
               randomWord={randomWord}
               handleRestartGame={handleRestartGame}
+              handleShowStats={handleShowStats}
             />
           )}
+
           <main className="flex-1 flex flex-col justify-evenly lg:gap-8">
             <AnswersDisplay
               userInput={userInput}

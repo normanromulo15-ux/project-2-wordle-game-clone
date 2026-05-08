@@ -1,7 +1,7 @@
-import ActionButtons from "./ActionButtons.jsx";
+import ActionButtons from "../ActionButtons.jsx";
 
 function GameOverMessage(props) {
-  const { randomWord, handleRestartGame } = props;
+  const { randomWord, handleRestartGame, handleShowStats } = props;
 
   return (
     <div className="fixed h-dvh w-dvw z-100 bg-[#0d0d0d] opacity-95 flex items-center justify-center inset-0">
@@ -16,10 +16,11 @@ function GameOverMessage(props) {
         </div>
         <ActionButtons
           handleRestartGame={handleRestartGame}
+          handleShowStats={handleShowStats}
         />
       </div>
     </div>
-  )
+  );
 }
 
 export default GameOverMessage;

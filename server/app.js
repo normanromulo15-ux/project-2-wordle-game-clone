@@ -36,7 +36,7 @@ app.post("/stats", async (req, res) => {
       "INSERT INTO player_stats (score) VALUES ($1) RETURNING *",
       [userAttempt],
     );
-    res.send(result.rows[0]);
+    res.json(result.rows[0]);
   } catch (error) {
     console.log(error.stack);
     res.status(500).json({ error: "Server error" });
