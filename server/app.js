@@ -15,10 +15,11 @@ app.use(cors());
 
 // Route to display the user's stats
 app.get("/stats", async (_, res) => {
+  const query =
+    "SELECT score, COUNT(*) AS frequency FROM player_stats GROUP BY score ORDER BY score ASC";
+
   try {
-    const result = await pool.query(
-      "SELECT * FROM player_stats ORDER BY id ASC",
-    );
+    const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) {
     console.log(error.stack);

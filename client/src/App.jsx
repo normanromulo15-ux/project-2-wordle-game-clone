@@ -205,11 +205,13 @@ function App() {
   async function handleShowStats() {
     setDisplayUserStats(true);
 
-    const response = await axios.get(`${BACKEND_API_URL}/stats`);
-
-    setUserStats(response.data);
-
-    console.log(response);
+    try {
+      const response = await axios.get(`${BACKEND_API_URL}/stats`);
+      setUserStats(response.data);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // FUNCTION TO PASS THE USER'S RATING AFTER THE GAME ENDS
@@ -221,7 +223,8 @@ function App() {
         `${BACKEND_API_URL}/stats`,
         attemptData,
       );
-      console.log(response.data);
+
+      console.log(response);
     } catch (error) {
       console.log(error.stack);
     }
