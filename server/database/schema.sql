@@ -7,5 +7,9 @@ CREATE TABLE player_stats (
 -- Query 2: For counting the frequency of each attempts
 SELECT score, COUNT(*) AS frequency
 FROM player_stats
+WHERE score > 0
 GROUP BY score
 ORDER BY score ASC
+
+-- For deleting all data
+DELETE * FROM player_stats

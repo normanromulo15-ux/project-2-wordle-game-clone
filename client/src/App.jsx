@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import BACKEND_API_URL from "../API/localhost.js";
 import words from "./components/js_files/words.js";
 import StartPage from "./components/StartPage.jsx";
 import LetterButtons from "./components/LetterButtons.jsx";
@@ -11,7 +12,6 @@ import StatsDisplay from "./components/StatsDisplay.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
-  const BACKEND_API_URL = import.meta.env.VITE_API_URL;
   const [startGame, setStartGame] = useState(false);
   const [randomWord, setRandomWord] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -22,11 +22,12 @@ function App() {
     useState(false);
   const [displayUserStats, setDisplayUserStats] = useState(false);
   const [userStats, setUserStats] = useState([]);
+  const [winRate, setWinRate] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [restartGame, setRestartGame] = useState(false);
 
   const reachedLimit = userInput.length === 5;
-  let guessCount = answers.length + 1;
+  const guessCount = answers.length + 1;
 
   useEffect(getRandomWord, [restartGame]);
 
@@ -58,6 +59,8 @@ function App() {
   // FUNCTION TO REDIRECT TO THE HOME SCREEN
   function handleRedirectToHome() {
     setDisplayUserStats(false);
+    setStartGame(false);
+    handleRestartGame();
   }
 
   // FUNCTION TO START THE GAME
@@ -178,18 +181,18 @@ function App() {
       setDisplayCorrectGuessMessage(true);
     }, 400);
 
-    submitUserScore();
+    submitUserScore(guessCount);
   }
 
   // FUNCTION TO DISPLAY THE GAME OVER MESSAGE
   function handleGameOver() {
-    guessCount = 0;
-
     setTimeout(() => {
       setGameOver(true);
     }, 300);
 
-    submitUserScore();
+    const userScore = null;
+
+    submitUserScore(userScore);
   }
 
   // FUNCTION TO RESTART THE GAME
@@ -204,27 +207,26 @@ function App() {
   // FUNCTION TO SHOW USER'S STATS
   async function handleShowStats() {
     setDisplayUserStats(true);
+    setGameOver(false);
+    setDisplayCorrectGuessMessage(false);
 
     try {
-      const response = await axios.get(`${BACKEND_API_URL}/stats`);
-      setUserStats(response.data);
-      console.log(response);
+      const response1 = await axios.get(`${BACKEND_API_URL}/stats`);
+      const response2 = await axios.get(`${BACKEND_API_URL}/scores`);
+
+      setUserStats(response1.data);
+      setWinRate(response2.data);
     } catch (error) {
       console.log(error);
     }
   }
 
   // FUNCTION TO PASS THE USER'S RATING AFTER THE GAME ENDS
-  async function submitUserScore() {
-    const attemptData = { attempt: guessCount };
+  async function submitUserScore(score) {
+    const attemptData = { attempt: score };
 
     try {
-      const response = await axios.post(
-        `${BACKEND_API_URL}/stats`,
-        attemptData,
-      );
-
-      console.log(response);
+      await axios.post(`${BACKEND_API_URL}/stats`, attemptData);
     } catch (error) {
       console.log(error.stack);
     }
@@ -243,6 +245,7 @@ function App() {
       {displayUserStats && (
         <StatsDisplay
           userStats={userStats}
+          winRate={winRate}
           handleRedirectToHome={handleRedirectToHome}
         />
       )}
