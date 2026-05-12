@@ -23,6 +23,7 @@ function App() {
   const [displayUserStats, setDisplayUserStats] = useState(false);
   const [userStats, setUserStats] = useState([]);
   const [winRate, setWinRate] = useState([]);
+  const [averageScore, setAverageScore] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [restartGame, setRestartGame] = useState(false);
 
@@ -212,10 +213,12 @@ function App() {
 
     try {
       const response1 = await axios.get(`${BACKEND_API_URL}/stats`);
-      const response2 = await axios.get(`${BACKEND_API_URL}/scores`);
+      const response2 = await axios.get(`${BACKEND_API_URL}/stats/scores`);
+      const response3 = await axios.get(`${BACKEND_API_URL}/stats/average`);
 
       setUserStats(response1.data);
       setWinRate(response2.data);
+      setAverageScore(response3.data);
     } catch (error) {
       console.log(error);
     }
@@ -246,6 +249,7 @@ function App() {
         <StatsDisplay
           userStats={userStats}
           winRate={winRate}
+          averageScore={averageScore}
           handleRedirectToHome={handleRedirectToHome}
         />
       )}

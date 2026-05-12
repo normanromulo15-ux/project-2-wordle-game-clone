@@ -13,31 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-// Route to get the user's win rate
-app.get("/scores", async (_, res) => {
-  const query = "SELECT score FROM player_stats";
-
-  try {
-    const result = await pool.query(query);
-    const { rows } = result;
-    const wins = rows.filter((e) => e.score > 0).length;
-    const losses = rows.length - wins;
-
-    const data = [
-      {
-        name: "success",
-        record: wins,
-      },
-      { name: "fail", record: losses },
-    ];
-
-    res.json(data);
-  } catch (error) {
-    console.log(error.stack);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
 // Route to display the user's stats
 app.get("/stats", async (_, res) => {
   const query =
@@ -71,6 +46,44 @@ app.post("/stats", async (req, res) => {
   } catch (error) {
     console.log(error.stack);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Route to get the user's win rate
+app.get("/stats/scores", async (_, res) => {
+  const query = "SELECT score FROM player_stats";
+
+  try {
+    const result = await pool.query(query);
+    const { rows } = result;
+    const wins = rows.filter((e) => e.score > 0).length;
+    const losses = rows.length - wins;
+
+    const data = [
+      {
+        name: "success",
+        record: wins,
+      },
+      { name: "fail", record: losses },
+    ];
+
+    res.json(data);
+  } catch (error) {
+    console.log(error.stack);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Route to get the user's average score
+app.get("/stats/average", async (_, res) => {
+  const query = "SELECT * FROM player_stats WHERE score > 0";
+
+  try {
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error.stack);
+    res.status(500).json("Server error");
   }
 });
 

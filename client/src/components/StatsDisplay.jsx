@@ -2,13 +2,13 @@ import MyBarChart from "./stats_charts/MyBarChart.jsx";
 import MyPieChart from "./stats_charts/MyPieChart.jsx";
 
 function StatsDisplay(props) {
-  const { userStats, winRate, handleRedirectToHome } = props;
+  const { userStats, winRate, averageScore, handleRedirectToHome } = props;
 
   return (
     <div className="fixed h-dvh w-dvw z-100 bg-[#0d0d0d] opacity-100 flex items-center justify-center inset-0">
       <div className="flex flex-col items-center justify-evenly text-white bg-[rgb(245,245,245)] p-2 w-6/7 h-3/4 font-bold rounded-4xl xl:w-11/20">
         <div className="flex flex-col gap-4 justify-evenly items-center w-full md:flex-row">
-          <MyBarChart userStats={userStats} />
+          <MyBarChart userStats={userStats} averageScore={averageScore} />
           <MyPieChart winRate={winRate} />
         </div>
         <button

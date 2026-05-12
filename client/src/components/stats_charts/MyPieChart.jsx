@@ -41,7 +41,7 @@ function MyPieChart(props) {
   };
 
   return (
-    <section className="flex flex-col gap-2 w-9/10 items-center">
+    <section className="flex flex-col gap-2 w-full items-center">
       <h2 className="text-base text-[#00b300] text-center">Win Rate</h2>
       <PieChart
         style={{
