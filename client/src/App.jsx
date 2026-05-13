@@ -220,7 +220,7 @@ function App() {
       setWinRate(response2.data);
       setAverageScore(response3.data);
     } catch (error) {
-      console.log(error);
+      console.log(error.stack);
     }
   }
 
@@ -237,7 +237,9 @@ function App() {
 
   return (
     <div
-      className={startGame && `bg-[rgb(245,245,245)] h-dvh flex justify-center`}
+      className={
+        startGame ? `bg-[rgb(245,245,245)] h-dvh flex justify-center` : null
+      }
     >
       {!startGame && (
         <StartPage

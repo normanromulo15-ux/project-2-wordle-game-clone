@@ -8,7 +8,7 @@ function MyBarChart(props) {
   const average = `${(sum / n).toFixed(1)}`;
 
   return (
-    <section className="flex flex-col gap-2 w-full items-center mb-8 md:m-0">
+    <section className="flex flex-col  w-full items-center mb-8 md:m-0">
       <h2 className="text-base text-black text-center">
         Average Successful Attempt: {average}
       </h2>
