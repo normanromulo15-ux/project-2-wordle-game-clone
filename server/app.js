@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-// Route to display the user's stats
+// Route to retrieve the user's stats
 app.get("/stats", async (_, res) => {
   const query =
     "SELECT score, COUNT(score) AS frequency FROM player_stats WHERE score > 0 GROUP BY score ORDER BY score ASC";
@@ -32,7 +32,7 @@ app.get("/stats", async (_, res) => {
   }
 });
 
-// Route to receive the user's score
+// Route to submit the user's score
 app.post("/stats", async (req, res) => {
   const { attempt } = req.body;
   const userAttempt = Number(attempt);
@@ -49,7 +49,7 @@ app.post("/stats", async (req, res) => {
   }
 });
 
-// Route to get the user's win rate
+// Route to retrieve the user's win rate
 app.get("/stats/scores", async (_, res) => {
   const query = "SELECT score FROM player_stats";
 
